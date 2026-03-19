@@ -1,4 +1,4 @@
-COMANDOS USADOS PR¡CTICA 1: COMPARTIR ARCHIVOS ENTRE LINUX UTILIZANDO NFS
+COMANDOS USADOS PR√ÅCTICA 1: COMPARTIR ARCHIVOS ENTRE LINUX UTILIZANDO NFS
 sudo dnf install nfs-utils -y
 
 sudo systemctl enable --now nfs-server
@@ -54,7 +54,7 @@ ls /mnt/OS3
 
 
 
-COMANDOS USADOS PR¡CTICA 2: CREACI”N DE FILESERVER COMPATIBLE CON WINDOWS UTILIZANDO SAMBA
+COMANDOS USADOS PR√ÅCTICA 2: CREACI√ìN DE FILESERVER COMPATIBLE CON WINDOWS UTILIZANDO SAMBA
 #1 Instalar Samba
 sudo dnf install -y samba samba-client
 
@@ -73,7 +73,7 @@ sudo chmod -R 777 /srv/samba/compartido
 #5 Crear 100 archivos adrian1...adrian100
 sudo touch /srv/samba/compartido/adrian{1..100}.txt
 
-#6 Editar archivo de configuraciÛn de Samba
+#6 Editar archivo de configuraci√≥n de Samba
 sudo nano /etc/samba/smb.conf
 
 # Agregar al final del archivo:
@@ -113,7 +113,7 @@ sudo systemctl restart smb nmb
 
 #12 Conectarse desde Windows
 # Abrir Explorador de archivos
-# Escribir en la barra: \\DirecciÛn IP\compartido
+# Escribir en la barra: \\Direcci√≥n IP\compartido
 ANGELSERVER\angelsamba o angelsamba
 # Ver los 100 archivos Adrian1...Adrian100
 
@@ -129,11 +129,11 @@ cat /srv/samba/compartido/adrian99.txt
 
 
 
-COMANDOS USADOS PR¡CTICA 3: CREACI”N DE CONTROLADOR DE DOMINIO CON CLIENTE WINDOWS 
+COMANDOS USADOS PR√ÅCTICA 3: CREACI√ìN DE CONTROLADOR DE DOMINIO CON CLIENTE WINDOWS 
 # 1. Configurar Hostname
 sudo hostnamectl set-hostname dc1.so3.inet
 sudo nano /etc/hosts
-# Agregar esta lÌnea (Cambia la IP por la de tu servidor Linux actual):
+# Agregar esta l√≠nea (Cambia la IP por la de tu servidor Linux actual):
 192.168.1.109   dc1.so3.inet   dc1
 
 # 2. Actualizar sistema
@@ -144,7 +144,7 @@ sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.no
 sudo crb enable
 sudo dnf makecache
 
-# 4. InstalaciÛn de Dependencias de compilaciÛn
+# 4. Instalaci√≥n de Dependencias de compilaci√≥n
 sudo dnf install -y wget tar gcc make python3-devel \
 flex bison gdb git keyutils-libs-devel \
 libacl-devel libattr-devel libblkid-devel \
@@ -156,11 +156,11 @@ libarchive-devel libicu-devel \
 perl-ExtUtils-MakeMaker perl-Parse-Yapp \
 rpcgen libtirpc-devel
 
-# 5. Instalar librerÌas de criptografÌa y seguridad
+# 5. Instalar librer√≠as de criptograf√≠a y seguridad
 sudo dnf install -y gnutls-devel python3-cryptography python3-dns
 
 
-## Descarga y CompilaciÛn de Samba ##
+## Descarga y Compilaci√≥n de Samba ##
 
 # 6. Crear directorio, descargar y descomprimir
 sudo mkdir -p /samba
@@ -173,14 +173,14 @@ cd samba-4.21.1/
 sudo dnf install perl-Parse-Yapp perl-Test-Simple perl-ExtUtils-MakeMaker -y
 sudo dnf install perl-FindBin perl-lib perl-English -y
 
-# 8. Configurar compilaciÛn, Compilar e Instalar
+# 8. Configurar compilaci√≥n, Compilar e Instalar
 sudo dnf install -y dbus-devel
 sudo dnf install -y python3-markdown
 sudo ./configure --prefix=/usr/local/samba --enable-fhs --with-systemd --with-ads --with-ldap
 sudo make
 sudo make install
 
-# 9. ConfiguraciÛn del Entorno (Variables PATH)
+# 9. Configuraci√≥n del Entorno (Variables PATH)
 export PATH=/usr/local/samba/bin:/usr/local/samba/sbin:$PATH
 echo 'export PATH=$PATH:/usr/local/samba/bin:/usr/local/samba/sbin' >> ~/.bashrc
 source ~/.bashrc
@@ -208,31 +208,31 @@ sudo /usr/local/samba/bin/samba-tool domain provision \
 sudo setenforce 0
 
 # 2. Crear registros DNS A manualmente (Soluciona el error de "Non-existent domain")
-# Registrar el dominio raÌz:
+# Registrar el dominio ra√≠z:
 sudo /usr/local/samba/bin/samba-tool dns add 127.0.0.1 so3.inet @ A 192.168.1.109
 
-# Registrar el nombre especÌfico del servidor:
+# Registrar el nombre espec√≠fico del servidor:
 sudo /usr/local/samba/bin/samba-tool dns add 127.0.0.1 so3.inet angelserver1 A 192.168.1.109
 
 # 3. Reiniciar el servicio para aplicar todos los cambios
 sudo systemctl restart samba-ad-dc
 
-# 4. VerificaciÛn final (Desde Windows o Linux):
+# 4. Verificaci√≥n final (Desde Windows o Linux):
 # nslookup so3.inet
 
-# 11. Editar el archivo de resoluciÛn DNS
+# 11. Editar el archivo de resoluci√≥n DNS
 sudo nano /etc/resolv.conf
 # Borrar lo que tenga y poner solo esto:
 nameserver 127.0.0.1
 nameserver 8.8.8.8
 
 
-## ConfiguraciÛn de Kerberos y Systemd ##
+## Configuraci√≥n de Kerberos y Systemd ##
 
-# 12. Copiar configuraciÛn de Kerberos
+# 12. Copiar configuraci√≥n de Kerberos
 sudo cp /usr/local/samba/var/lib/samba/private/krb5.conf /etc/krb5.conf
 
-# 13. Crear el servicio para que inicie autom·tico (Ya con las correcciones hechas)
+# 13. Crear el servicio para que inicie autom√°tico (Ya con las correcciones hechas)
 sudo nano /etc/systemd/system/samba-ad-dc.service
 
 # Pegar esto dentro del archivo:
@@ -254,19 +254,19 @@ sudo setenforce 0
 sudo systemctl daemon-reload
 sudo systemctl enable --now samba-ad-dc
 
-# 15. ConfiguraciÛn del Firewall (Opcional)
+# 15. Configuraci√≥n del Firewall (Opcional)
 sudo firewall-cmd --permanent --add-service={dns,kerberos,ldap,ldaps}
 sudo firewall-cmd --permanent --add-port={53,88,135,139,389,445,464,636,3268,3269}/tcp
 sudo firewall-cmd --permanent --add-port={53,88,137,138,389,464}/udp
 sudo firewall-cmd --reload
 
 
-## CreaciÛn de Usuario y Pruebas ##
+## Creaci√≥n de Usuario y Pruebas ##
 
-# 16. Agregar el usuario de la pr·ctica
+# 16. Agregar el usuario de la pr√°ctica
 sudo /usr/local/samba/bin/samba-tool user add lanegracubana 20251447Av
 
-# 17. Verificar DNS y AutenticaciÛn en Linux
+# 17. Verificar DNS y Autenticaci√≥n en Linux
 host -t SRV _ldap._tcp.so3.inet
 sudo dnf install krb5-workstation -y
 kinit administrator
@@ -274,10 +274,10 @@ kinit administrator
 
 
 ====================================================================
-## EN LA M¡QUINA VIRTUAL DE WINDOWS ##
+## EN LA M√ÅQUINA VIRTUAL DE WINDOWS ##
 ====================================================================
 
-1. Aseg˙rate de apagar el Firewall en Linux por si acaso:
+1. Aseg√∫rate de apagar el Firewall en Linux por si acaso:
    sudo systemctl stop firewalld
 
 2. En Windows, abre las conexiones de red:
@@ -285,19 +285,19 @@ kinit administrator
    #Apaga IPv6.
    #En IPv4, pon la IP de tu servidor Linux como "Servidor DNS Preferido".
 
-3. Abre un CMD en Windows y prueba comunicaciÛn:
+3. Abre un CMD en Windows y prueba comunicaci√≥n:
    ping so3.inet
 
 4. Unirse al dominio:
    win + r -> sysdm.cpl
    - Clic en "Cambiar..."
    - Seleccionar "Miembro del dominio" y poner: so3.inet
-   - Te pedir· credenciales. Usa:
+   - Te pedir√° credenciales. Usa:
      Usuario: Administrator
      Clave: 20251447Av
 
 5. Reinicia Windows.
-6. Al volver a iniciar sesiÛn, elige "Otro usuario" y entra con el usuario de tu pr·ctica:
+6. Al volver a iniciar sesi√≥n, elige "Otro usuario" y entra con el usuario de tu pr√°ctica:
    Usuario: lanegracubana
    Clave: 20251447Av
 
