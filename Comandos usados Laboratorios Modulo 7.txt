@@ -1,4 +1,5 @@
-COMANDOS USADOS PR¡CTICA 1: COMPARTIR ARCHIVOS ENTRE LINUX UTILIZANDO NFS
+COMANDOS USADOS PR√ÅCTICA 1: COMPARTIR ARCHIVOS ENTRE LINUX UTILIZANDO NFS
+sudo su
 sudo dnf install nfs-utils -y
 
 sudo systemctl enable --now nfs-server
@@ -7,6 +8,7 @@ sudo systemctl status nfs-server
 sudo mkdir -p /home/avalenzuela/OS3
 cd /home/avalenzuela/OS3
 sudo touch adrian{001..100}.txt
+ls
 
 sudo chown -R nobody:nobody /home/avalenzuela/OS3
 sudo chmod 777 /home/avalenzuela/OS3
@@ -14,7 +16,7 @@ sudo chmod 777 /home/avalenzuela/OS3
 nano /etc/exports
 
 ---------dentro del nano-------
-
+(la ip ac√° es la ip del cliente NFS)
 /home/avalenzuela/OS3 192.168.1.182(rw,sync,no_root_squash,no_subtree_check)
 
 -------------------------------
@@ -39,7 +41,7 @@ ls /mnt/OS3
 sudo nano /etc/fstab
 
 ---------dentro del nano-------
-
+(la ip que va ac√° es la del server principal)
 192.168.1.109:/home/avalenzuela/OS3 /mnt/OS3 nfs defaults 0 0
 
 -------------------------------
@@ -57,7 +59,7 @@ ls /mnt/OS3
 
 
 
-COMANDOS USADOS PR¡CTICA 2: CREACI”N DE FILESERVER COMPATIBLE CON WINDOWS UTILIZANDO SAMBA
+COMANDOS USADOS PR√ÅCTICA 2: CREACI√ìN DE FILESERVER COMPATIBLE CON WINDOWS UTILIZANDO SAMBA
 #1 Instalar Samba
 sudo dnf install -y samba samba-client
 
@@ -76,7 +78,7 @@ sudo chmod -R 777 /srv/samba/compartido
 #5 Crear 100 archivos adrian1...adrian100
 sudo touch /srv/samba/compartido/adrian{1..100}.txt
 
-#6 Editar archivo de configuraciÛn de Samba
+#6 Editar archivo de configuraci√≥n de Samba
 sudo nano /etc/samba/smb.conf
 
 # Agregar al final del archivo:
@@ -116,16 +118,17 @@ sudo systemctl restart smb nmb
 
 #12 Conectarse desde Windows
 # Abrir Explorador de archivos
-# Escribir en la barra: \\DirecciÛn IP\compartido
+#(PASOS: Este equipo - Computer - Map network drive)#
+# Escribir en la barra: \\Direcci√≥n IP\compartido
 ANGELSERVER\angelsamba o angelsamba
-# Ver los 100 archivos Adrian1...Adrian100
+# Ver los 100 archivos Adrian001...Adrian100
 
 #13 Desde Windows: abrir Adrian99.txt
 # Escribir: el zumzum de la carabela
 # Guardar
 
 #14 Validar desde Linux que el archivo fue modificado
-cat /srv/samba/compartido/adrian99.txt
+cat /srv/samba/compartido/adrian099.txt
 
 
 
@@ -135,10 +138,11 @@ cat /srv/samba/compartido/adrian99.txt
 
 
 
-COMANDOS USADOS PR¡CTICA 3: CREACI”N DE CONTROLADOR DE DOMINIO CON CLIENTE WINDOWS 
+COMANDOS USADOS PR√ÅCTICA 3: CREACI√ìN DE CONTROLADOR DE DOMINIO CON CLIENTE WINDOWS 
 # 1. Configurar Hostname
 sudo hostnamectl set-hostname dc1.os3.inet
 sudo nano /etc/hosts
+(la ip que va ac√° es la ip actual del server)
 192.168.1.109 dc1.os3.inet dc1
 
 # 3. Actualizar
@@ -150,11 +154,11 @@ sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.no
 # 5. Habilitar CodeReady Builder (CRB)
 sudo crb enable
 
-# 6. Refrescar cachÈ
+# 6. Refrescar cach√©
 sudo dnf makecache
 
-## InstalaciÛn de Dependencias ##
-# Herramientas b·sicas de compilaciÛn
+## Instalaci√≥n de Dependencias ##
+# Herramientas b√°sicas de compilaci√≥n
 sudo dnf install -y wget tar gcc make python3-devel \
     flex bison gdb git keyutils-libs-devel \
     libacl-devel libattr-devel libblkid-devel \
@@ -166,10 +170,10 @@ sudo dnf install -y wget tar gcc make python3-devel \
     perl-ExtUtils-MakeMaker perl-Parse-Yapp \
     rpcgen libtirpc-devel
 
-# Instalar librerÌas de criptografÌa y seguridad
+# Instalar librer√≠as de criptograf√≠a y seguridad
 sudo dnf install -y gnutls-devel python3-cryptography python3-dns
 
-## Descarga y CompilaciÛn de Samba ##
+## Descarga y Compilaci√≥n de Samba ##
 # 1. Crear directorio y descargar
 sudo mkdir -p /samba
 cd /samba
@@ -179,9 +183,10 @@ sudo wget https://download.samba.org/pub/samba/stable/samba-4.21.1.tar.gz
 sudo tar -zxvf samba-4.21.1.tar.gz
 cd samba-4.21.1/
 
-# 3. Configurar la compilaciÛn
+# 3. Configurar la compilaci√≥n
 # Verificar que se tiene todo lo necesario
 sudo ./configure --prefix=/usr/local/samba --enable-fhs --with-systemd --with-ads --with-ldap
+sudo dnf install dbus-devel -y
 
 # Instalamos dependencias de perl
 sudo dnf install perl-Parse-Yapp perl-Test-Simple perl-ExtUtils-MakeMaker -y
@@ -193,7 +198,7 @@ sudo make
 # 5. Instalar
 sudo make install
 
-## ConfiguraciÛn del Entorno (Para que la terminal reconozca los comandos samba y samba-tool) ##
+## Configuraci√≥n del Entorno (Para que la terminal reconozca los comandos samba y samba-tool) ##
 
 # Agregar al PATH actual
 export PATH=/usr/local/samba/bin:/usr/local/samba/sbin:$PATH
@@ -213,20 +218,20 @@ sudo /usr/local/samba/bin/samba-tool domain provision \
 #Domain: OS3-DOM
 #Server Role: dc
 #DNS backend: SAMBA_INTERNAL
-#DNS Forwarder IP address: 192.168.1.109
+#DNS Forwarder IP address: 192.168.1.109(IP de la maquina)
 #Administrator password: 20251447Av
 
-## Editamos el archivo de resoluciÛn DNS ##
+## Editamos el archivo de resoluci√≥n DNS ##
 sudo nano /etc/resolv.conf
 nameserver 127.0.0.1
 nameserver 8.8.8.8
 
-## ConfiguraciÛn de Kerberos y Arranque ##
-# 1. Copiar configuraciÛn de Kerberos
+## Configuraci√≥n de Kerberos y Arranque ##
+# 1. Copiar configuraci√≥n de Kerberos
 sudo cp /usr/local/samba/var/lib/samba/private/krb5.conf /etc/krb5.conf
 
 # 2. Crear el servicio de Systemd (Para que inicie como servicio)
-# Como compilamos, no se creÛ el servicio autom·tico. Vamos a crearlo:
+# Como compilamos, no se cre√≥ el servicio autom√°tico. Vamos a crearlo:
 sudo nano /etc/systemd/system/samba-ad-dc.service
 
 [Unit]
@@ -242,7 +247,7 @@ ExecReload=/bin/kill -HUP $MAINPID
 [Install]
 WantedBy=multi-user.target
 
-## InicializaciÛn del servicio ##
+## Inicializaci√≥n del servicio ##
 
 Hacemos unos cambios en el archivo antes de iniciarlo:
 
@@ -255,7 +260,7 @@ Borrar PID File
 sudo systemctl daemon-reload
 sudo systemctl enable --now samba-ad-dc
 
-## ConfiguraciÛn del Firewall ##
+## Configuraci√≥n del Firewall ##
 
 sudo firewall-cmd --permanent --add-service={dns,kerberos,ldap,ldaps}
 sudo firewall-cmd --permanent --add-port={53,88,135,139,389,445,464,636,3268,3269}/tcp
@@ -269,11 +274,11 @@ sudo /usr/local/samba/bin/samba-tool user add lanegracubana 20251447Av
 # Verificar DNS
 host -t SRV _ldap._tcp.os3.inet
 
-# Verificar AutenticaciÛn
+# Verificar Autenticaci√≥n
 sudo dnf install krb5-workstation -y
 kinit administrator
-# (Poner la contraseÒa)
-
+# (Poner la contrase√±a)
+#(antes de pasar a windows, apagar el firewall para evitar errores)
 ## En windows ##
 
 #Propiedades IPv4 y en servidor DNS preferido ponemos la ip de nuestra maquina
