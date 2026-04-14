@@ -297,3 +297,24 @@ kinit administrator
 #Usuario: Administrator
 #Clave: 20251447Av
 #Reiniciamos y entramos
+
+
+## ====== EMERGENCIAS DE CONTRASEÑA EN SAMBA ====== ##
+
+# 1. Forzar cambio de contraseña (escribir con cuidado, no se ven los asteriscos)
+sudo /usr/local/samba/bin/samba-tool user setpassword administrator
+
+# 2. Desbloquear la cuenta (obligatorio si Windows falló varias veces)
+sudo /usr/local/samba/bin/samba-tool user enable administrator
+
+# 3. Matar el proceso para borrar la contraseña vieja de la memoria RAM
+sudo pkill samba
+
+# 4. Volver a encender el motor de Samba limpio
+sudo /usr/local/samba/sbin/samba
+
+# 5. Probar autenticación local (El dominio DEBE ir en mayúsculas)
+kinit administrator@OS3.INET
+
+# (Si el kinit funciona y pide la clave nueva, ir a Windows. 
+# Si Windows sigue fallando, usar el comando 'date' y sincronizar la hora).
