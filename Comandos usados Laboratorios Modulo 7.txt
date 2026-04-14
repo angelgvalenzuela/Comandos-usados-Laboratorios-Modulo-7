@@ -186,7 +186,9 @@ cd samba-4.21.1/
 # 3. Configurar la compilación
 # Verificar que se tiene todo lo necesario
 sudo ./configure --prefix=/usr/local/samba --enable-fhs --with-systemd --with-ads --with-ldap
+
 sudo dnf install dbus-devel -y
+sudo dnf install python3-markdown -y
 
 # Instalamos dependencias de perl
 sudo dnf install perl-Parse-Yapp perl-Test-Simple perl-ExtUtils-MakeMaker -y
